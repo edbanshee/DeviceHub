@@ -38,6 +38,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // User closed the popup intentionally, do not show error banner
         return null;
       }
+      if (err?.code === 'auth/unauthorized-domain') {
+        const domain = typeof window !== 'undefined' ? window.location.hostname : 'github.io';
+        setAuthError(`auth/unauthorized-domain:${domain}`);
+        return null;
+      }
       console.error('Google Sign In Error:', err);
       setAuthError(err?.message || 'Error authenticating with Google');
       return null;

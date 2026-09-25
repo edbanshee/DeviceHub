@@ -20,6 +20,11 @@ export const translations = {
     authCancelSignIn: 'Inicio de sesión cancelado',
     authWelcome: '¡Bienvenido!',
     authSignedOutNotice: 'Sesión cerrada. Tu espacio de invitado local ha sido restaurado.',
+    authUnauthorizedDomainTitle: 'Dominio no autorizado en Firebase',
+    authUnauthorizedDomainDesc: 'Para iniciar sesión desde GitHub Pages o tu dominio personalizado ({domain}), debes autorizarlo en la consola de Firebase.',
+    authUnauthorizedDomainStep1: 'Abre la consola de Firebase en Authentication > Settings > Authorized domains.',
+    authUnauthorizedDomainStep2: 'Añade el dominio "{domain}" a la lista de dominios autorizados.',
+    authUnauthorizedDomainBtn: 'Abrir Configuración de Firebase',
     
     // Stats Banner
     statTotalStorage: 'Almacenamiento Total',
@@ -593,6 +598,11 @@ export const translations = {
     authCancelSignIn: 'Sign-in cancelled',
     authWelcome: 'Welcome!',
     authSignedOutNotice: 'Signed out. Your local guest workspace has been restored.',
+    authUnauthorizedDomainTitle: 'Unauthorized Domain in Firebase',
+    authUnauthorizedDomainDesc: 'To sign in with Google from GitHub Pages or your custom domain ({domain}), you need to add it to authorized domains in Firebase Console.',
+    authUnauthorizedDomainStep1: 'Open Firebase Console > Authentication > Settings > Authorized domains.',
+    authUnauthorizedDomainStep2: 'Add the domain "{domain}" to the authorized domains list.',
+    authUnauthorizedDomainBtn: 'Open Firebase Settings',
     
     // Stats Banner
     statTotalStorage: 'Total Storage',

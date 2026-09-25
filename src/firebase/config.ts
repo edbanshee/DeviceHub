@@ -12,9 +12,9 @@ googleProvider.setCustomParameters({
 });
 
 // Configure Firestore with ignoreUndefinedProperties to prevent FirebaseError on undefined fields
-export const db: Firestore = initializeFirestore(app, {
-  ignoreUndefinedProperties: true,
-}, (firebaseConfig as any).firestoreDatabaseId);
+export const db: Firestore = (firebaseConfig as any).firestoreDatabaseId && (firebaseConfig as any).firestoreDatabaseId !== '(default)'
+  ? initializeFirestore(app, { ignoreUndefinedProperties: true }, (firebaseConfig as any).firestoreDatabaseId)
+  : initializeFirestore(app, { ignoreUndefinedProperties: true });
 
 // Test connection on boot as recommended in Firebase integration skill
 export async function testFirestoreConnection() {

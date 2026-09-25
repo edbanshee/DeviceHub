@@ -1,12 +1,10 @@
 {
-  "projectId": "stone-burner-hpqwl",
-  "appId": "1:124661268423:web:d317742111e175898e23e2",
-  "apiKey": "AIzaSyCSB1jjwwzq9ElGQHdEK-5UHgzou4Giots",
-  "authDomain": "stone-burner-hpqwl.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-ede45444-d57e-4fb1-ac28-fec6d8252284",
-  "storageBucket": "stone-burner-hpqwl.firebasestorage.app",
-  "messagingSenderId": "124661268423",
-  "measurementId": "",
-  "oAuthClientId": "124661268423-vnvgf78kcnckegr8brqg9g7klvb135uv.apps.googleusercontent.com",
-  "recaptchaSiteKey": ""
+  "projectId": "devices-hub-12a3d",
+  "appId": "1:1088346748392:web:668a9552a8baa07481205d",
+  "apiKey": "AIzaSyCBCoId34TMBoqU6l2DjX4uKaCBfELXYnQ",
+  "authDomain": "devices-hub-12a3d.firebaseapp.com",
+  "firestoreDatabaseId": "(default)",
+  "storageBucket": "devices-hub-12a3d.firebasestorage.app",
+  "messagingSenderId": "1088346748392",
+  "measurementId": "G-8VRFYDV4LS"
 }

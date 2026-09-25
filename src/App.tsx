@@ -3,7 +3,7 @@ import { ActiveView, Device, StorageDrive, Accessory } from './types';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { ToastProvider, useToast } from './context/ToastContext';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { StorageProvider, useStorage } from './context/StorageContext';
 import { Navbar } from './components/layout/Navbar';
 import { StatsBanner } from './components/layout/StatsBanner';
@@ -21,10 +21,11 @@ import { ImportExportModal } from './components/modals/ImportExportModal';
 import { AtomicWipeModal } from './components/modals/AtomicWipeModal';
 import { CloudOnboardingModal } from './components/modals/CloudOnboardingModal';
 import { DeviceDeleteConfirmModal } from './components/modals/DeviceDeleteConfirmModal';
-import { AlertCircle, Trash2, X } from 'lucide-react';
+import { AlertCircle, Trash2, X, ExternalLink, ShieldAlert } from 'lucide-react';
 
 const MainAppContent: React.FC = () => {
   const { isLoading, deleteDrive, deleteAccessory } = useStorage();
+  const { authError, clearAuthError } = useAuth();
   const { showToast } = useToast();
   const { t } = useLanguage();
 
@@ -123,7 +124,60 @@ const MainAppContent: React.FC = () => {
       />
 
       {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4">
+        {/* Auth Error Banner (e.g. Unauthorized Domain on GitHub Pages) */}
+        {authError && (
+          <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-in fade-in duration-200">
+            <div className="flex items-start gap-3">
+              <div className="p-2 rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400 shrink-0">
+                <ShieldAlert className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-amber-950 dark:text-amber-200">
+                  {authError.startsWith('auth/unauthorized-domain')
+                    ? t('authUnauthorizedDomainTitle')
+                    : 'Error de Autenticación'}
+                </h4>
+                <p className="text-xs text-amber-800 dark:text-amber-300/90 mt-0.5 max-w-2xl leading-relaxed">
+                  {authError.startsWith('auth/unauthorized-domain:')
+                    ? t('authUnauthorizedDomainDesc', { domain: authError.split(':')[1] || window.location.hostname })
+                    : authError}
+                </p>
+                {authError.startsWith('auth/unauthorized-domain') && (
+                  <div className="mt-2 text-xs text-amber-900 dark:text-amber-200/80 space-y-1">
+                    <p className="font-semibold">
+                      1. {t('authUnauthorizedDomainStep1')}
+                    </p>
+                    <p className="font-semibold">
+                      2. {t('authUnauthorizedDomainStep2', { domain: authError.split(':')[1] || window.location.hostname })}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+              {authError.startsWith('auth/unauthorized-domain') && (
+                <a
+                  href="https://console.firebase.google.com/project/devices-hub-12a3d/authentication/settings"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-amber-900 dark:text-amber-100 bg-amber-200/80 dark:bg-amber-900/60 hover:bg-amber-300 dark:hover:bg-amber-800/80 rounded-xl transition-colors cursor-pointer"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>{t('authUnauthorizedDomainBtn')}</span>
+                </a>
+              )}
+              <button
+                type="button"
+                onClick={clearAuthError}
+                className="p-1.5 text-amber-700 dark:text-amber-400 hover:text-amber-950 dark:hover:text-amber-200 rounded-lg cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* KPI Stats Banner (Toggled by Chip Button) */}
         {showStats && <StatsBanner activeView={activeView} />}
 

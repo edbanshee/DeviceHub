@@ -124,8 +124,22 @@ const MainAppContent: React.FC = () => {
     }
   };
 
-  // If user is not logged in and hasn't explicitly entered guest mode yet, show WelcomeView
-  if (!user && !guestModeEntered && !authLoading) {
+  // If Firebase is verifying a known logged-in session, show an elegant branded loader
+  const hasKnownSession = typeof window !== 'undefined' && localStorage.getItem('collectahub_has_session') === 'true';
+  if (authLoading && hasKnownSession) {
+    return (
+      <div className="min-h-screen bg-[#f8f9fb] dark:bg-[#0e0e10] flex flex-col items-center justify-center p-4 transition-colors">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-xl shadow-purple-600/30 animate-pulse mb-4">
+          <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        </div>
+        <h2 className="text-base font-extrabold text-slate-900 dark:text-[#f4f4f5] tracking-tight">{t('appName')}</h2>
+        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 font-medium">{t('authSyncing')}</p>
+      </div>
+    );
+  }
+
+  // If user is not logged in and hasn't explicitly entered guest mode yet, show WelcomeView immediately without flicker
+  if (!user && !guestModeEntered) {
     return <WelcomeView onEnterGuest={handleEnterGuest} />;
   }
 

@@ -26,6 +26,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setLoading(false);
       if (currentUser) {
         setAuthError(null);
+        try {
+          localStorage.setItem('collectahub_has_session', 'true');
+        } catch {}
+      } else {
+        try {
+          localStorage.removeItem('collectahub_has_session');
+        } catch {}
       }
     });
 

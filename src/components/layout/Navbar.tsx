@@ -39,7 +39,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenImportExport,
   onOpenAtomicWipe,
 }) => {
-  const { user, signInWithGoogle, signOut } = useAuth();
+  const { user, isSigningIn, signInWithGoogle, signOut } = useAuth();
   const { devices, drives, accessories } = useStorage();
   const { t, language, setLanguage } = useLanguage();
   const { resolvedTheme, toggleTheme } = useTheme();
@@ -207,10 +207,19 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 type="button"
                 onClick={() => signInWithGoogle()}
+                disabled={isSigningIn}
                 title="Sincronizar con tu cuenta de Google"
-                className="w-8 h-8 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-[#18181c] text-slate-600 dark:text-[#a1a1aa] hover:text-purple-600 dark:hover:text-purple-400 hover:bg-slate-200 dark:hover:bg-[#222226] border border-slate-200 dark:border-[#27272b] transition-colors"
+                className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
+                  isSigningIn
+                    ? 'opacity-50 cursor-not-allowed bg-slate-100 dark:bg-[#18181c] text-purple-600'
+                    : 'bg-slate-100 dark:bg-[#18181c] text-slate-600 dark:text-[#a1a1aa] hover:text-purple-600 dark:hover:text-purple-400 hover:bg-slate-200 dark:hover:bg-[#222226] border border-slate-200 dark:border-[#27272b] cursor-pointer'
+                }`}
               >
-                <Cloud className="w-4 h-4" />
+                {isSigningIn ? (
+                  <div className="w-3.5 h-3.5 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Cloud className="w-4 h-4" />
+                )}
               </button>
             )}
 

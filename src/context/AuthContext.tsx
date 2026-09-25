@@ -5,6 +5,7 @@ import { auth, googleProvider } from '../firebase/config';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  isSigningIn: boolean;
   signInWithGoogle: () => Promise<User | null>;
   signOut: () => Promise<void>;
   authError: string | null;
@@ -16,26 +17,36 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isSigningIn, setIsSigningIn] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
+      if (currentUser) {
+        setAuthError(null);
+      }
     });
 
     return () => unsubscribe();
   }, []);
 
   const signInWithGoogle = async (): Promise<User | null> => {
+    if (isSigningIn) return null;
+    setIsSigningIn(true);
+    setAuthError(null);
+
     try {
-      setAuthError(null);
       const result = await signInWithPopup(auth, googleProvider);
       return result.user;
     } catch (err: any) {
       // Handle clean cancellation
-      if (err?.code === 'auth/popup-closed-by-user' || err?.code === 'auth/cancelled-popup-request') {
-        // User closed the popup intentionally, do not show error banner
+      if (
+        err?.code === 'auth/popup-closed-by-user' ||
+        err?.code === 'auth/cancelled-popup-request' ||
+        err?.message?.includes('closed-by-user')
+      ) {
         return null;
       }
       if (err?.code === 'auth/unauthorized-domain') {
@@ -43,9 +54,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setAuthError(`auth/unauthorized-domain:${domain}`);
         return null;
       }
+      // If internal assertion or popup collision occurs, log cleanly and avoid unhandled crash
+      if (err?.message?.includes('INTERNAL ASSERTION FAILED') || err?.message?.includes('Pending promise')) {
+        console.warn('Firebase popup in flight collision prevented.');
+        return null;
+      }
       console.error('Google Sign In Error:', err);
       setAuthError(err?.message || 'Error authenticating with Google');
       return null;
+    } finally {
+      setIsSigningIn(false);
     }
   };
 
@@ -65,6 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         user,
         loading,
+        isSigningIn,
         signInWithGoogle,
         signOut,
         authError,

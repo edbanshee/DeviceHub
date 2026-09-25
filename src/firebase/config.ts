@@ -1,0 +1,29 @@
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { initializeFirestore, Firestore, doc, getDocFromServer } from 'firebase/firestore';
+import firebaseConfig from '../../firebase-applet-config.json';
+
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+
+export const auth = getAuth(app);
+export const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
+  prompt: 'select_account',
+});
+
+// Configure Firestore with ignoreUndefinedProperties to prevent FirebaseError on undefined fields
+export const db: Firestore = initializeFirestore(app, {
+  ignoreUndefinedProperties: true,
+}, (firebaseConfig as any).firestoreDatabaseId);
+
+// Test connection on boot as recommended in Firebase integration skill
+export async function testFirestoreConnection() {
+  try {
+    await getDocFromServer(doc(db, 'test', 'connection'));
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('the client is offline')) {
+      console.warn('Firebase client offline status:', error.message);
+    }
+  }
+}
+testFirestoreConnection();

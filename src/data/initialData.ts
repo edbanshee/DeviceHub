@@ -1,0 +1,217 @@
+import { Device, Accessory, StorageDrive, UserSettings } from '../types';
+
+export const DEFAULT_DEVICE_CATEGORIES: string[] = [
+  'Consola Portátil',
+  'Consola de Sobremesa',
+  'PC / Laptop',
+  'Reproductor de Audio (DAP)',
+  'Smartphone / Tablet',
+  'Servidor / NAS',
+  'Centro Multimedia',
+  'Otro',
+];
+
+export const DEFAULT_DEVICE_CATEGORIES_EN: string[] = [
+  'Handheld Console',
+  'Home Console',
+  'PC / Laptop',
+  'Audio Player (DAP)',
+  'Smartphone / Tablet',
+  'Server / NAS',
+  'Media Center',
+  'Other',
+];
+
+export const DEFAULT_ACCESSORY_CATEGORIES: string[] = [
+  'Fundas',
+  'Mandos',
+  'Cables',
+  'Cargadores',
+  'Docks',
+  'Auriculares',
+  'Tarjetas',
+];
+
+export const DEFAULT_DRIVE_TYPES: string[] = [
+  'SSD (NVMe/PCIe)',
+  'SSD (SATA)',
+  'HDD (Internal)',
+  'HDD (External)',
+  'Micro SD',
+  'Internal UFS',
+  'USB Flash Drive',
+  'Cloud Storage (Google Drive)',
+  'Cloud Storage (OneDrive / M365)',
+  'Cloud Storage (Dropbox / Proton / Mega)',
+  'Network Drive (SMB / NFS / NAS)',
+  'Virtual Cloud Mount (Rclone / RaiDrive)',
+];
+
+export const DEFAULT_FORMAT_OPTIONS: string[] = [
+  'NTFS',
+  'Cloud VFS / WebDAV',
+  'exFAT',
+  'Ext4',
+  'Btrfs',
+  'FAT32',
+  'APFS',
+  'ZFS',
+];
+
+export const DEFAULT_CLOUD_PROVIDERS: string[] = [
+  'Google Drive',
+  'Microsoft OneDrive / 365',
+  'Dropbox',
+  'Proton Drive',
+  'Mega',
+  'iCloud Drive',
+  'Nextcloud',
+  'AWS S3 / Wasabi',
+  'Local NAS (SMB / NFS)',
+  'Other',
+];
+
+export const INITIAL_SETTINGS: UserSettings = {
+  driveTypes: DEFAULT_DRIVE_TYPES,
+  formatOptions: DEFAULT_FORMAT_OPTIONS,
+  deviceCategories: DEFAULT_DEVICE_CATEGORIES,
+  accessoryCategories: DEFAULT_ACCESSORY_CATEGORIES,
+  cloudProviders: DEFAULT_CLOUD_PROVIDERS,
+};
+
+export const INITIAL_DEVICES: Device[] = [
+  {
+    id: 'dev_retro_portable',
+    name: 'Consola Portátil (Retro Gaming)',
+    category: 'Consola Portátil',
+    system: 'Android / Linux',
+    cpu: 'Octa-Core ARM CPU',
+    imageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&auto=format&fit=crop&q=80',
+    rating: 5,
+    isGamingDevice: true,
+    emulationOverview: 'Emulación fluida de 8/16-bits, PS1, N64, Dreamcast y PSP; títulos ligeros de PS2 y GameCube.',
+    emulationScores: {
+      'Game Boy Advance': 5,
+      'PlayStation': 5,
+      'Nintendo 64': 5,
+      'Dreamcast': 4,
+      'PSP': 4,
+      'PlayStation 2': 3,
+      'GameCube': 3,
+      'SNES': 5,
+      'NES': 5,
+      'Genesis / Mega Drive': 5,
+      'Game Boy': 5,
+      'Game Boy Color': 5,
+      'MAME': 5,
+      'Neo Geo AES': 5,
+      'Saturn': 3,
+      'Atari 2600': 5,
+    },
+    notes: 'Dispositivo portátil con controles integrados para emulación y juegos retro.',
+  },
+  {
+    id: 'dev_pc_work',
+    name: 'PC / Laptop de Trabajo',
+    category: 'PC / Laptop',
+    system: 'Windows 11 / Linux',
+    cpu: 'Intel / AMD Multi-Core Processor',
+    imageUrl: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&auto=format&fit=crop&q=80',
+    rating: 4,
+    isGamingDevice: false,
+    emulationOverview: '',
+    emulationScores: {},
+    notes: 'Equipo principal para trabajo, copias de seguridad y gestión de almacenamiento.',
+  },
+];
+
+export const INITIAL_ACCESSORIES: Accessory[] = [
+  {
+    id: 'acc_funda_retro',
+    name: 'Estuche Rígido de Viaje Antigolpes',
+    category: 'Fundas',
+    description: 'Funda rígida de material EVA con interior aterciopelado y ranuras para 10 tarjetas MicroSD.',
+    tags: ['estuche', 'proteccion', 'viaje', 'eva'],
+    rating: 5,
+    device: 'Consola Portátil (Retro Gaming)',
+    imageUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'acc_mando_pro',
+    name: 'Control Inalámbrico Retro Bluetooth',
+    category: 'Mandos',
+    description: 'Mando ergonómico inalámbrico con sticks analógicos hall-effect, cruceta clásica y vibración dual.',
+    tags: ['control', 'bluetooth', 'inalambrico', 'retro'],
+    rating: 4,
+    device: 'Consola Portátil (Retro Gaming)',
+    imageUrl: 'https://images.unsplash.com/photo-1592840496694-26d035b52b48?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'acc_auriculares_anc',
+    name: 'Auriculares Supraaurales con Micrófono Desmontable',
+    category: 'Auriculares',
+    description: 'Auriculares estéreo con almohadillas de espuma viscoelástica y conector universal Jack 3.5mm.',
+    tags: ['audio', 'auriculares', 'jack-3.5mm', 'gaming'],
+    rating: 5,
+    device: undefined, // Standalone / independiente
+    imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'acc_dock_usbc',
+    name: 'Docking Station USB-C Triple Monitor',
+    category: 'Docks',
+    description: 'Estación de acoplamiento de aluminio con 2x HDMI 4K, DisplayPort, Gigabit LAN y entrega de energía 100W.',
+    tags: ['dock', 'pantalla', 'trabajo'],
+    rating: 4,
+    device: 'PC / Laptop de Trabajo',
+    imageUrl: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&auto=format&fit=crop&q=80',
+  },
+];
+
+export const INITIAL_DRIVES: StorageDrive[] = [
+  {
+    id: 'drive_work_ssd',
+    device: 'PC / Laptop de Trabajo',
+    drive: 'SSD Principal (C:)',
+    driveType: 'SSD (NVMe/PCIe)',
+    label: 'Sistema y Aplicaciones',
+    capacity: 1000,
+    used: 420,
+    free: 580,
+    format: 'NTFS',
+    tags: ['sistema', 'trabajo'],
+    notes: 'Disco principal del sistema operativo y suites de trabajo.',
+    storageMedium: 'physical',
+  },
+  {
+    id: 'drive_work_gdrive',
+    device: 'PC / Laptop de Trabajo',
+    drive: 'Google Drive (Nube)',
+    driveType: 'Cloud Storage (Google Drive)',
+    label: 'Respaldo en la Nube',
+    capacity: 2000,
+    used: 650,
+    free: 1350,
+    format: 'Cloud VFS / WebDAV',
+    tags: ['nube', 'respaldo'],
+    notes: 'Google Workspace Cloud sincronizado en la nube.',
+    storageMedium: 'cloud_network',
+    cloudProvider: 'Google Drive',
+    mountPoint: 'G:\\',
+    accountEmail: 'usuario.cloud@ejemplo.com',
+  },
+  {
+    id: 'drive_retro_sd',
+    device: 'Consola Portátil (Retro Gaming)',
+    drive: 'MicroSD 256GB',
+    driveType: 'Micro SD',
+    label: 'Colección de Juegos (ROMs)',
+    capacity: 256,
+    used: 175,
+    free: 81,
+    format: 'exFAT',
+    tags: ['juegos', 'emulacion', 'roms'],
+    notes: 'Tarjeta de alta velocidad con biblioteca de juegos y emuladores.',
+    storageMedium: 'physical',
+  },
+];

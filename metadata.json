@@ -1,0 +1,6 @@
+{
+  "name": "Storage Tracker",
+  "description": "Catalog and monitor physical and cloud storage across multiple devices with hardware specs and retro emulation matrix.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

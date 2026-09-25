@@ -1,0 +1,99 @@
+{
+  "entities": {
+    "Device": {
+      "title": "Device",
+      "description": "Hardware device specification, physical condition rating and emulation ratings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 100 },
+        "name": { "type": "string", "maxLength": 150 },
+        "category": { "type": "string", "maxLength": 100 },
+        "system": { "type": "string", "maxLength": 100 },
+        "cpu": { "type": "string", "maxLength": 150 },
+        "imageUrl": { "type": "string", "maxLength": 2048 },
+        "rating": { "type": "number" },
+        "isGamingDevice": { "type": "boolean" },
+        "emulationOverview": { "type": "string", "maxLength": 2000 },
+        "emulationScores": { "type": "object" },
+        "notes": { "type": "string", "maxLength": 3000 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "category", "system", "cpu", "isGamingDevice"]
+    },
+    "Accessory": {
+      "title": "Accessory",
+      "description": "Hardware accessory specification, physical condition rating and assigned device",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 100 },
+        "name": { "type": "string", "maxLength": 150 },
+        "category": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 3000 },
+        "tags": { "type": "array" },
+        "rating": { "type": "number" },
+        "imageUrl": { "type": "string", "maxLength": 2048 },
+        "device": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "category", "rating"]
+    },
+    "StorageDrive": {
+      "title": "StorageDrive",
+      "description": "Physical or cloud/network storage unit assigned to a device",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 100 },
+        "device": { "type": "string", "maxLength": 150 },
+        "drive": { "type": "string", "maxLength": 150 },
+        "driveType": { "type": "string", "maxLength": 100 },
+        "label": { "type": "string", "maxLength": 150 },
+        "capacity": { "type": "number" },
+        "used": { "type": "number" },
+        "free": { "type": "number" },
+        "format": { "type": "string", "maxLength": 100 },
+        "tags": { "type": "array" },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "storageMedium": { "type": "string", "enum": ["physical", "cloud_network"] },
+        "cloudProvider": { "type": "string", "maxLength": 100 },
+        "mountPoint": { "type": "string", "maxLength": 100 },
+        "accountEmail": { "type": "string", "maxLength": 200 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "device", "drive", "driveType", "label", "capacity", "used", "free", "format", "storageMedium"]
+    },
+    "UserSettings": {
+      "title": "UserSettings",
+      "description": "Custom drive types, format options, and categories configured by user",
+      "type": "object",
+      "properties": {
+        "driveTypes": { "type": "array" },
+        "formatOptions": { "type": "array" },
+        "deviceCategories": { "type": "array" },
+        "accessoryCategories": { "type": "array" },
+        "cloudProviders": { "type": "array" },
+        "updatedAt": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}/devices/{deviceId}": {
+      "schema": "Device",
+      "description": "User specific hardware device records"
+    },
+    "/users/{userId}/accessories/{accessoryId}": {
+      "schema": "Accessory",
+      "description": "User specific hardware accessory records"
+    },
+    "/users/{userId}/drives/{driveId}": {
+      "schema": "StorageDrive",
+      "description": "User specific storage drives"
+    },
+    "/users/{userId}/settings/{settingId}": {
+      "schema": "UserSettings",
+      "description": "User configuration for custom types and options"
+    }
+  }
+}

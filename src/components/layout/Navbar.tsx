@@ -28,6 +28,7 @@ interface NavbarProps {
   onOpenSettings: () => void;
   onOpenImportExport: () => void;
   onOpenAtomicWipe: () => void;
+  onExitGuest?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -38,6 +39,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenSettings,
   onOpenImportExport,
   onOpenAtomicWipe,
+  onExitGuest,
 }) => {
   const { user, isSigningIn, signInWithGoogle, signOut } = useAuth();
   const { devices, drives, accessories } = useStorage();
@@ -196,31 +198,46 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                 <button
                   type="button"
-                  onClick={signOut}
+                  onClick={async () => {
+                    await signOut();
+                    onExitGuest?.();
+                  }}
                   title={t('authSignOut')}
-                  className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-[#222226] rounded-xl transition-colors"
+                  className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-[#222226] rounded-xl transition-colors cursor-pointer"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                 </button>
               </div>
             ) : (
-              <button
-                type="button"
-                onClick={() => signInWithGoogle()}
-                disabled={isSigningIn}
-                title="Sincronizar con tu cuenta de Google"
-                className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
-                  isSigningIn
-                    ? 'opacity-50 cursor-not-allowed bg-slate-100 dark:bg-[#18181c] text-purple-600'
-                    : 'bg-slate-100 dark:bg-[#18181c] text-slate-600 dark:text-[#a1a1aa] hover:text-purple-600 dark:hover:text-purple-400 hover:bg-slate-200 dark:hover:bg-[#222226] border border-slate-200 dark:border-[#27272b] cursor-pointer'
-                }`}
-              >
-                {isSigningIn ? (
-                  <div className="w-3.5 h-3.5 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <Cloud className="w-4 h-4" />
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => signInWithGoogle()}
+                  disabled={isSigningIn}
+                  title="Sincronizar con tu cuenta de Google"
+                  className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
+                    isSigningIn
+                      ? 'opacity-50 cursor-not-allowed bg-slate-100 dark:bg-[#18181c] text-purple-600'
+                      : 'bg-slate-100 dark:bg-[#18181c] text-slate-600 dark:text-[#a1a1aa] hover:text-purple-600 dark:hover:text-purple-400 hover:bg-slate-200 dark:hover:bg-[#222226] border border-slate-200 dark:border-[#27272b] cursor-pointer'
+                  }`}
+                >
+                  {isSigningIn ? (
+                    <div className="w-3.5 h-3.5 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <Cloud className="w-4 h-4" />
+                  )}
+                </button>
+                {onExitGuest && (
+                  <button
+                    type="button"
+                    onClick={onExitGuest}
+                    title="Volver a la pantalla de bienvenida / Exit to Welcome"
+                    className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-[#f4f4f5] hover:bg-slate-100 dark:hover:bg-[#222226] rounded-xl transition-colors cursor-pointer"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                  </button>
                 )}
-              </button>
+              </div>
             )}
 
             {/* Manage Options (Settings / Sliders icon) */}

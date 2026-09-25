@@ -21,15 +21,29 @@ import { ImportExportModal } from './components/modals/ImportExportModal';
 import { AtomicWipeModal } from './components/modals/AtomicWipeModal';
 import { CloudOnboardingModal } from './components/modals/CloudOnboardingModal';
 import { DeviceDeleteConfirmModal } from './components/modals/DeviceDeleteConfirmModal';
+import { WelcomeView } from './components/welcome/WelcomeView';
 import { AlertCircle, Trash2, X, ExternalLink, ShieldAlert } from 'lucide-react';
 
 const MainAppContent: React.FC = () => {
   const { isLoading, deleteDrive, deleteAccessory } = useStorage();
-  const { authError, clearAuthError } = useAuth();
+  const { user, loading: authLoading, authError, clearAuthError } = useAuth();
   const { showToast } = useToast();
   const { t } = useLanguage();
 
   const [activeView, setActiveView] = useState<ActiveView>('devices');
+  const [guestModeEntered, setGuestModeEntered] = useState<boolean>(() => {
+    return localStorage.getItem('collectahub_guest_entered') === 'true';
+  });
+
+  const handleEnterGuest = () => {
+    localStorage.setItem('collectahub_guest_entered', 'true');
+    setGuestModeEntered(true);
+  };
+
+  const handleExitGuest = () => {
+    localStorage.removeItem('collectahub_guest_entered');
+    setGuestModeEntered(false);
+  };
 
   // Modal states
   const [deviceModal, setDeviceModal] = useState<{ isOpen: boolean; deviceToEdit: Device | null }>({
@@ -110,6 +124,11 @@ const MainAppContent: React.FC = () => {
     }
   };
 
+  // If user is not logged in and hasn't explicitly entered guest mode yet, show WelcomeView
+  if (!user && !guestModeEntered && !authLoading) {
+    return <WelcomeView onEnterGuest={handleEnterGuest} />;
+  }
+
   return (
     <div className="min-h-screen bg-[#f4f5f7] dark:bg-[#121214] text-slate-900 dark:text-[#f4f4f5] flex flex-col transition-colors duration-150 selection:bg-purple-600 selection:text-white">
       {/* Top Navbar */}
@@ -121,6 +140,7 @@ const MainAppContent: React.FC = () => {
         onOpenSettings={() => setSettingsModalOpen(true)}
         onOpenImportExport={() => setImportExportModalOpen(true)}
         onOpenAtomicWipe={() => setAtomicWipeModalOpen(true)}
+        onExitGuest={handleExitGuest}
       />
 
       {/* Main Container */}

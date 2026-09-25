@@ -1,8 +1,30 @@
 export const translations = {
   es: {
     // App
-    appName: 'Storage Tracker',
-    appSubtitle: 'Gestor Integral de Almacenamiento & Matriz Retro',
+    appName: 'CollectaHub',
+    appBrand: 'CollectaHub',
+    appSubtitle: 'Gestor Integral de Hardware, Almacenamiento & Matriz Retro',
+    
+    // Welcome / Landing Screen
+    welcomeBadge: 'Bóveda de Hardware & Emulación',
+    welcomeHeroTitle: 'Organiza tus consolas, almacenamiento y emulación',
+    welcomeHeroSubtitle: 'El centro de control definitivo para catalogar tus dispositivos, monitorear espacio en discos físicos y la nube, y evaluar compatibilidad retro en 64 plataformas.',
+    welcomeBtnGoogle: 'Iniciar Sesión con Google',
+    welcomeBtnGuest: 'Explorar en Modo Local / Demo',
+    welcomeBtnGuestTip: 'Sin registro • Datos seguros guardados en tu navegador',
+    welcomeFeatureDevicesTitle: 'Catálogo de Dispositivos',
+    welcomeFeatureDevicesDesc: 'Registra consolas portátiles, PCs y laptops con CPU, SO, estado físico e imágenes.',
+    welcomeFeatureStorageTitle: 'Almacenamiento Físico & Nube',
+    welcomeFeatureStorageDesc: 'Monitorea SSDs, NVMe, MicroSDs y almacenamiento en nube con gráficos de uso y alertas.',
+    welcomeFeatureMatrixTitle: 'Matriz de Emulación Retro',
+    welcomeFeatureMatrixDesc: 'Compara y califica el rendimiento de tus equipos frente a 64 plataformas maestras.',
+    welcomeFeatureAccessoriesTitle: 'Gestión de Accesorios',
+    welcomeFeatureAccessoriesDesc: 'Vincula mandos, docks y cables a tus equipos o mantenlos independientes con calificaciones.',
+    welcomePillCloud: 'Sincronización en la Nube',
+    welcomePillPrivacy: 'Privacidad Total',
+    welcomePillExport: 'Respaldos JSON Atómicos',
+    welcomePillOffline: 'Funciona 100% Offline',
+    welcomeFooter: 'CollectaHub • Plataforma integral para entusiastas del hardware y la emulación',
     
     // Navigation
     navDevices: 'Dispositivos',
@@ -516,8 +538,7 @@ export const translations = {
     btnImporting: 'Importando...',
     copiedToClipboard: 'Copiado al portapapeles',
 
-    // New Devices Hub UI Keys
-    appBrand: 'Devices Hub',
+    // New CollectaHub UI Keys
     statTotalDevices: 'TOTAL DISPOSITIVOS',
     statInInventory: 'en tu inventario',
     statEmulationEcosystem: 'ECOSISTEMA DE EMULACIÓN',
@@ -579,8 +600,30 @@ export const translations = {
   
   en: {
     // App
-    appName: 'Storage Tracker',
-    appSubtitle: 'Comprehensive Storage Manager & Retro Matrix',
+    appName: 'CollectaHub',
+    appBrand: 'CollectaHub',
+    appSubtitle: 'Comprehensive Hardware, Storage & Retro Matrix Hub',
+    
+    // Welcome / Landing Screen
+    welcomeBadge: 'Hardware & Emulation Vault',
+    welcomeHeroTitle: 'Organize your consoles, storage and emulation',
+    welcomeHeroSubtitle: 'The definitive command center to catalog your physical devices, monitor storage drives and cloud space, and evaluate retro compatibility across 64 master platforms.',
+    welcomeBtnGoogle: 'Sign in with Google',
+    welcomeBtnGuest: 'Explore in Local / Demo Mode',
+    welcomeBtnGuestTip: 'No sign-in required • Securely stored in your browser',
+    welcomeFeatureDevicesTitle: 'Device Catalog',
+    welcomeFeatureDevicesDesc: 'Catalog handhelds, consoles, PCs, and laptops with CPU, OS, physical condition, and photos.',
+    welcomeFeatureStorageTitle: 'Physical & Cloud Storage',
+    welcomeFeatureStorageDesc: 'Monitor SSDs, NVMe, MicroSDs, and cloud drives with visual capacity gauges and warnings.',
+    welcomeFeatureMatrixTitle: 'Retro Emulation Matrix',
+    welcomeFeatureMatrixDesc: 'Benchmark and compare the performance of your hardware against 64 master retro platforms.',
+    welcomeFeatureAccessoriesTitle: 'Accessory Management',
+    welcomeFeatureAccessoriesDesc: 'Link controllers, docks, and cables to devices or keep them standalone with condition scores.',
+    welcomePillCloud: 'Real-time Cloud Sync',
+    welcomePillPrivacy: 'Complete Privacy',
+    welcomePillExport: 'Atomic JSON Backups',
+    welcomePillOffline: 'Works 100% Offline',
+    welcomeFooter: 'CollectaHub • All-in-one platform for hardware and retro emulation enthusiasts',
     
     // Navigation
     navDevices: 'Devices',
@@ -1094,8 +1137,7 @@ export const translations = {
     btnImporting: 'Importing...',
     copiedToClipboard: 'Copied to clipboard',
 
-    // New Devices Hub UI Keys
-    appBrand: 'Devices Hub',
+    // New CollectaHub UI Keys
     statTotalDevices: 'TOTAL DEVICES',
     statInInventory: 'in your inventory',
     statEmulationEcosystem: 'EMULATION ECOSYSTEM',

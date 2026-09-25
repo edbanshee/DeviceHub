@@ -396,6 +396,9 @@ export const translations = {
     deleteDeviceDrivesNotice: 'Este dispositivo tiene {count} unidad(es) de almacenamiento asociada(s):',
     deleteDeviceActionCascade: 'Eliminar también todas sus unidades de almacenamiento ({count})',
     deleteDeviceActionUnlink: 'Conservar las unidades y desvincularlas (dejar sin dispositivo asignado)',
+    deleteDeviceAccessoriesNotice: 'Este dispositivo tiene {count} accesorio(s) asociado(s):',
+    deleteDeviceActionUnlinkAcc: 'Conservar los accesorios y desvincularlos ({count})',
+    deleteDeviceActionCascadeAcc: 'Eliminar también todos sus accesorios ({count})',
     deleteDeviceBtnConfirm: 'Confirmar Eliminación',
     deleteDeviceBtnCancel: 'Cancelar',
     
@@ -966,6 +969,9 @@ export const translations = {
     deleteDeviceDrivesNotice: 'This device has {count} assigned storage drive(s):',
     deleteDeviceActionCascade: 'Also delete all its assigned drives ({count})',
     deleteDeviceActionUnlink: 'Keep drives and unlink them (leave unassigned)',
+    deleteDeviceAccessoriesNotice: 'This device has {count} assigned accessory/accessories:',
+    deleteDeviceActionUnlinkAcc: 'Keep accessories and unlink them ({count})',
+    deleteDeviceActionCascadeAcc: 'Also delete all its assigned accessories ({count})',
     deleteDeviceBtnConfirm: 'Confirm Deletion',
     deleteDeviceBtnCancel: 'Cancel',
     

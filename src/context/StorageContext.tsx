@@ -70,7 +70,7 @@ interface StorageContextType {
   
   // CRUD Device
   saveDevice: (device: Partial<Device> & { name: string; category: string; system: string; cpu?: string; rating?: number }) => Promise<void>;
-  deleteDevice: (deviceId: string, cascadeDrives: boolean) => Promise<void>;
+  deleteDevice: (deviceId: string, cascadeDrives: boolean, cascadeAccessories?: boolean) => Promise<void>;
 
   // CRUD Accessory
   saveAccessory: (accessory: Partial<Accessory> & { name: string; category: string; rating: number }) => Promise<void>;
@@ -588,7 +588,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   };
 
-  const deleteDevice = async (deviceId: string, cascadeDrives: boolean) => {
+  const deleteDevice = async (deviceId: string, cascadeDrives: boolean, cascadeAccessories: boolean = false) => {
     const target = devices.find((d) => d.id === deviceId);
     if (!target) return;
 
@@ -599,16 +599,22 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       if (cascadeDrives) {
         updatedDrives = drives.filter((dr) => dr.device !== target.name);
-        updatedAccessories = accessories.filter((acc) => acc.device !== target.name);
       } else {
-        // Unlink drives & accessories
+        // Unlink drives
         updatedDrives = drives.map((dr) =>
           dr.device === target.name ? { ...dr, device: 'Sin Dispositivo / Unassigned' } : dr
         );
+      }
+
+      if (cascadeAccessories) {
+        updatedAccessories = accessories.filter((acc) => acc.device !== target.name);
+      } else {
+        // Unlink accessories
         updatedAccessories = accessories.map((acc) =>
           acc.device === target.name ? { ...acc, device: undefined } : acc
         );
       }
+
       setDevices(updatedDevices);
       setDrives(updatedDrives);
       setAccessories(updatedAccessories);
@@ -630,9 +636,6 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
         targetDrives.forEach((dr) => {
           batch.delete(doc(db, 'users', user.uid, 'drives', dr.id));
         });
-        targetAccs.forEach((acc) => {
-          batch.delete(doc(db, 'users', user.uid, 'accessories', acc.id));
-        });
       } else {
         if (targetDrives.length > 0) {
           targetDrives.forEach((dr) => {
@@ -642,6 +645,13 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
             });
           });
         }
+      }
+
+      if (cascadeAccessories) {
+        targetAccs.forEach((acc) => {
+          batch.delete(doc(db, 'users', user.uid, 'accessories', acc.id));
+        });
+      } else {
         if (targetAccs.length > 0) {
           targetAccs.forEach((acc) => {
             batch.update(doc(db, 'users', user.uid, 'accessories', acc.id), {

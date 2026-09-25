@@ -29,14 +29,10 @@ import { cleanFirestoreData } from '../utils/cleanFirestoreData';
 import { getSafeRating } from '../utils/ratingColors';
 
 // Storage keys for guest isolation
-const GUEST_DEVICES_KEY = 'storage_tracker_guest_devices';
-const GUEST_DRIVES_KEY = 'storage_tracker_guest_drives';
-const GUEST_ACCESSORIES_KEY = 'storage_tracker_guest_accessories';
-const GUEST_SETTINGS_KEY = 'storage_tracker_guest_settings';
-const GUEST_BACKUP_DEVICES_KEY = 'storage_tracker_guest_backup_devices';
-const GUEST_BACKUP_DRIVES_KEY = 'storage_tracker_guest_backup_drives';
-const GUEST_BACKUP_ACCESSORIES_KEY = 'storage_tracker_guest_backup_accessories';
-const GUEST_BACKUP_SETTINGS_KEY = 'storage_tracker_guest_backup_settings';
+const GUEST_DEVICES_KEY = 'collectahub_guest_devices';
+const GUEST_DRIVES_KEY = 'collectahub_guest_drives';
+const GUEST_ACCESSORIES_KEY = 'collectahub_guest_accessories';
+const GUEST_SETTINGS_KEY = 'collectahub_guest_settings';
 
 enum OperationType {
   CREATE = 'create',
@@ -235,6 +231,14 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
     currentUserIdRef.current = user?.uid || null;
 
     if (!user) {
+      // Clean up legacy keys if present
+      try {
+        localStorage.removeItem('storage_tracker_guest_backup_devices');
+        localStorage.removeItem('storage_tracker_guest_backup_drives');
+        localStorage.removeItem('storage_tracker_guest_backup_accessories');
+        localStorage.removeItem('storage_tracker_guest_backup_settings');
+      } catch {}
+
       // Offline / Guest Mode
       setSyncStatus('local');
       setIsLoading(true);
@@ -244,28 +248,30 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const savedAccessories = localStorage.getItem(GUEST_ACCESSORIES_KEY);
       const savedSettings = localStorage.getItem(GUEST_SETTINGS_KEY);
 
-      if (savedDevices && savedDrives) {
+      if (savedDevices !== null) {
         try {
           const rawDevs: Device[] = JSON.parse(savedDevices);
-          const sanitizedDevs = rawDevs.map((d) => ({
+          const sanitizedDevs = (Array.isArray(rawDevs) ? rawDevs : INITIAL_DEVICES).map((d) => ({
             ...d,
             rating: getSafeRating(d.rating, 5),
           }));
           setDevices(sanitizedDevs);
-          setDrives(JSON.parse(savedDrives));
 
-          let rawAccs: Accessory[] = savedAccessories ? JSON.parse(savedAccessories) : INITIAL_ACCESSORIES;
-          const sanitizedAccs = rawAccs.map((a) => ({
+          const rawDrives: StorageDrive[] = savedDrives ? JSON.parse(savedDrives) : [];
+          setDrives(Array.isArray(rawDrives) ? rawDrives : INITIAL_DRIVES);
+
+          const rawAccs: Accessory[] = savedAccessories ? JSON.parse(savedAccessories) : [];
+          const sanitizedAccs = (Array.isArray(rawAccs) ? rawAccs : INITIAL_ACCESSORIES).map((a) => ({
             ...a,
             rating: getSafeRating(a.rating, 5),
           }));
           setAccessories(sanitizedAccs);
 
-          // Auto-heal localStorage if any rating was missing
-          localStorage.setItem(GUEST_ACCESSORIES_KEY, JSON.stringify(sanitizedAccs));
-          localStorage.setItem(GUEST_DEVICES_KEY, JSON.stringify(sanitizedDevs));
-
-          if (savedSettings) setSettings(JSON.parse(savedSettings));
+          if (savedSettings) {
+            setSettings(JSON.parse(savedSettings));
+          } else {
+            setSettings(INITIAL_SETTINGS);
+          }
         } catch (e) {
           console.error('Error parsing guest data, loading defaults:', e);
           setDevices(INITIAL_DEVICES);
@@ -274,7 +280,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setSettings(INITIAL_SETTINGS);
         }
       } else {
-        // Initialize guest with complete rich sample data
+        // First time in guest mode or clean cache: Initialize with complete rich sample demo data
         setDevices(INITIAL_DEVICES);
         setDrives(INITIAL_DRIVES);
         setAccessories(INITIAL_ACCESSORIES);
@@ -290,16 +296,11 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
 
     // Authenticated User:
-    // A. Backup guest workspace safely
+    // Snapshot current guest workspace for onboarding import modal
     const currentGuestDevs = localStorage.getItem(GUEST_DEVICES_KEY);
     const currentGuestDrives = localStorage.getItem(GUEST_DRIVES_KEY);
     const currentGuestAccessories = localStorage.getItem(GUEST_ACCESSORIES_KEY);
     const currentGuestSettings = localStorage.getItem(GUEST_SETTINGS_KEY);
-
-    if (currentGuestDevs) localStorage.setItem(GUEST_BACKUP_DEVICES_KEY, currentGuestDevs);
-    if (currentGuestDrives) localStorage.setItem(GUEST_BACKUP_DRIVES_KEY, currentGuestDrives);
-    if (currentGuestAccessories) localStorage.setItem(GUEST_BACKUP_ACCESSORIES_KEY, currentGuestAccessories);
-    if (currentGuestSettings) localStorage.setItem(GUEST_BACKUP_SETTINGS_KEY, currentGuestSettings);
 
     try {
       const parsedDevs = currentGuestDevs ? JSON.parse(currentGuestDevs) : INITIAL_DEVICES;
@@ -441,31 +442,6 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
       unsubAccessories();
       unsubDrives();
     };
-  }, [user]);
-
-  // Handle restoring guest workspace on sign out
-  useEffect(() => {
-    if (!user) {
-      const backupDevs = localStorage.getItem(GUEST_BACKUP_DEVICES_KEY);
-      const backupDrives = localStorage.getItem(GUEST_BACKUP_DRIVES_KEY);
-      const backupAccs = localStorage.getItem(GUEST_BACKUP_ACCESSORIES_KEY);
-      const backupSettings = localStorage.getItem(GUEST_BACKUP_SETTINGS_KEY);
-
-      if (backupDevs && backupDrives) {
-        localStorage.setItem(GUEST_DEVICES_KEY, backupDevs);
-        localStorage.setItem(GUEST_DRIVES_KEY, backupDrives);
-        if (backupAccs) localStorage.setItem(GUEST_ACCESSORIES_KEY, backupAccs);
-        if (backupSettings) localStorage.setItem(GUEST_SETTINGS_KEY, backupSettings);
-        try {
-          setDevices(JSON.parse(backupDevs));
-          setDrives(JSON.parse(backupDrives));
-          if (backupAccs) setAccessories(JSON.parse(backupAccs));
-          if (backupSettings) setSettings(JSON.parse(backupSettings));
-        } catch {
-          // fallback
-        }
-      }
-    }
   }, [user]);
 
   // Persist guest changes to localStorage

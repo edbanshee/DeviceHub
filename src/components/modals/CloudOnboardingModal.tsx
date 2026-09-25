@@ -29,13 +29,13 @@ export const CloudOnboardingModal: React.FC = () => {
     }
     try {
       const bDevs =
-        localStorage.getItem('storage_tracker_guest_backup_devices') ||
+        localStorage.getItem('collectahub_guest_devices') ||
         localStorage.getItem('storage_tracker_guest_devices');
       const bDrives =
-        localStorage.getItem('storage_tracker_guest_backup_drives') ||
+        localStorage.getItem('collectahub_guest_drives') ||
         localStorage.getItem('storage_tracker_guest_drives');
       const bAccs =
-        localStorage.getItem('storage_tracker_guest_backup_accessories') ||
+        localStorage.getItem('collectahub_guest_accessories') ||
         localStorage.getItem('storage_tracker_guest_accessories');
       const devs = bDevs ? JSON.parse(bDevs) : [];
       const drvs = bDrives ? JSON.parse(bDrives) : [];

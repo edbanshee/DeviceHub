@@ -16,6 +16,7 @@ import {
   Lock,
   ExternalLink,
   ChevronRight,
+  Info,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -172,6 +173,19 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({ onEnterGuest }) => {
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-3">
             {t('welcomeBtnGuestTip')}
           </p>
+
+          {/* LocalStorage Cache / Cookie Notice Box */}
+          <div className="mt-5 p-3.5 sm:p-4 rounded-2xl bg-slate-100/90 dark:bg-[#161619] border border-slate-200/80 dark:border-[#27272b] text-left max-w-xl mx-auto flex items-start gap-3 text-xs text-slate-600 dark:text-[#a1a1aa] shadow-xs animate-in fade-in duration-300">
+            <div className="p-1.5 rounded-lg bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 shrink-0 mt-0.5">
+              <Info className="w-4 h-4" />
+            </div>
+            <div className="leading-relaxed">
+              <span className="font-bold text-slate-900 dark:text-[#f4f4f5]">
+                {t('welcomeLocalStorageNoticeTitle')}:{' '}
+              </span>
+              <span>{t('welcomeLocalStorageNotice')}</span>
+            </div>
+          </div>
         </div>
 
         {/* Feature Cards Grid */}

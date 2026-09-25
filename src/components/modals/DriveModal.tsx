@@ -77,9 +77,7 @@ export const DriveModal: React.FC<DriveModalProps> = ({
   const availableCloudProviders = useMemo(() => {
     return Array.from(
       new Set([
-        ...(settings.cloudProviders && settings.cloudProviders.length > 0
-          ? settings.cloudProviders
-          : DEFAULT_CLOUD_PROVIDERS),
+        ...(settings.cloudProviders || []),
         ...drives.map((d) => d.cloudProvider).filter(Boolean),
         cloudProvider,
       ].filter(Boolean) as string[])

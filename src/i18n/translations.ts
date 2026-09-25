@@ -467,11 +467,11 @@ export const translations = {
     conflictBtnCancel: 'Cancelar',
     
     // Cloud Onboarding Modal
-    onboardingTitle: '¡Bienvenido a Storage Tracker!',
+    onboardingTitle: '¡Bienvenido a CollectaHub!',
     onboardingSubtitle: 'Has iniciado sesión con {email}. La nube vinculada a tu cuenta de Google está actualmente vacía, pero detectamos datos en tu espacio local.',
     onboardingQuestion: '¿Cómo deseas inicializar el almacenamiento en tu cuenta de Google?',
     onboardingOptionSyncTitle: 'Sincronizar e Importar Datos Locales',
-    onboardingOptionSyncDesc: 'Copia tus {deviceCount} dispositivo(s) y {driveCount} unidad(es) actuales a la nube vinculada a tu cuenta de Google para tener acceso desde cualquier dispositivo.',
+    onboardingOptionSyncDesc: 'Copia tus {deviceCount} dispositivo(s), {accessoryCount} accesorio(s) y {driveCount} unidad(es) actuales a la nube vinculada a tu cuenta de Google para tener acceso desde cualquier dispositivo.',
     onboardingOptionFreshTitle: 'Iniciar con Cuenta Limpia',
     onboardingOptionFreshDesc: 'Comenzar desde cero en la nube vinculada a tu cuenta de Google. Tus datos locales de invitado se mantendrán intactos en este navegador para cuando uses la app sin sesión.',
     onboardingBtnSync: 'Importar Datos a tu Cuenta de Google',
@@ -1066,11 +1066,11 @@ export const translations = {
     conflictBtnCancel: 'Cancel',
     
     // Cloud Onboarding Modal
-    onboardingTitle: 'Welcome to Storage Tracker!',
+    onboardingTitle: 'Welcome to CollectaHub!',
     onboardingSubtitle: 'You are signed in as {email}. The cloud storage linked to your Google account is empty, but we found existing data in your local browser workspace.',
     onboardingQuestion: 'How would you like to initialize storage in your Google account?',
     onboardingOptionSyncTitle: 'Sync & Import Local Data',
-    onboardingOptionSyncDesc: 'Copy your current {deviceCount} device(s) and {driveCount} drive(s) to the cloud linked to your Google account to access them from anywhere.',
+    onboardingOptionSyncDesc: 'Copy your current {deviceCount} device(s), {accessoryCount} accessory(ies), and {driveCount} drive(s) to the cloud linked to your Google account to access them from anywhere.',
     onboardingOptionFreshTitle: 'Start with Clean Account',
     onboardingOptionFreshDesc: 'Start empty in the cloud linked to your Google account. Your local guest data will remain safely preserved in this browser for when you sign out.',
     onboardingBtnSync: 'Import Data to Google Account',

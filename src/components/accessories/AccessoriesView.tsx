@@ -28,9 +28,9 @@ export const AccessoriesView: React.FC<AccessoriesViewProps> = ({
 
   // Categories list from settings and existing accessories
   const availableCategories = useMemo(() => {
-    const list = Array.isArray(settings.accessoryCategories) && settings.accessoryCategories.length > 0
+    const list = Array.isArray(settings.accessoryCategories)
       ? settings.accessoryCategories
-      : DEFAULT_ACCESSORY_CATEGORIES;
+      : [];
     return Array.from(new Set([...list, ...accessories.map((a) => a.category)].filter(Boolean)));
   }, [settings.accessoryCategories, accessories]);
 

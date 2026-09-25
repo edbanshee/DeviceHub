@@ -115,16 +115,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
     activeTab === 'categories'
       ? settings.deviceCategories || []
       : activeTab === 'accessoryCategories'
-      ? (Array.isArray(settings.accessoryCategories) && settings.accessoryCategories.length > 0
-          ? settings.accessoryCategories
-          : DEFAULT_ACCESSORY_CATEGORIES)
+      ? settings.accessoryCategories || []
       : activeTab === 'driveTypes'
       ? settings.driveTypes || []
       : activeTab === 'formats'
       ? settings.formatOptions || []
-      : settings.cloudProviders && settings.cloudProviders.length > 0
-      ? settings.cloudProviders
-      : DEFAULT_CLOUD_PROVIDERS;
+      : settings.cloudProviders || [];
 
   return (
     <>

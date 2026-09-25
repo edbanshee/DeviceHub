@@ -142,17 +142,16 @@ export const mergeSettingsWithData = (
   const accessoryCategories = new Set(
     Array.isArray(currentSettings.accessoryCategories)
       ? currentSettings.accessoryCategories
-      : DEFAULT_ACCESSORY_CATEGORIES
+      : []
   );
   const driveTypes = new Set(Array.isArray(currentSettings.driveTypes) ? currentSettings.driveTypes : []);
   const formats = new Set(Array.isArray(currentSettings.formatOptions) ? currentSettings.formatOptions : []);
   
   // IMPORTANT: If cloudProviders was explicitly set to empty array (e.g. from atomic wipe), keep it empty!
-  // Only fallback to DEFAULT_CLOUD_PROVIDERS if undefined
   const cloudProviders = new Set(
     Array.isArray(currentSettings.cloudProviders)
       ? currentSettings.cloudProviders
-      : DEFAULT_CLOUD_PROVIDERS
+      : []
   );
 
   currentDevices.forEach((dev) => {
@@ -358,11 +357,11 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (docSnap.exists()) {
           const cloudSettings = docSnap.data() as UserSettings;
           setSettings({
-            driveTypes: Array.isArray(cloudSettings.driveTypes) ? cloudSettings.driveTypes : INITIAL_SETTINGS.driveTypes,
-            formatOptions: Array.isArray(cloudSettings.formatOptions) ? cloudSettings.formatOptions : INITIAL_SETTINGS.formatOptions,
-            deviceCategories: Array.isArray(cloudSettings.deviceCategories) ? cloudSettings.deviceCategories : INITIAL_SETTINGS.deviceCategories,
-            accessoryCategories: Array.isArray(cloudSettings.accessoryCategories) ? cloudSettings.accessoryCategories : DEFAULT_ACCESSORY_CATEGORIES,
-            cloudProviders: Array.isArray(cloudSettings.cloudProviders) ? cloudSettings.cloudProviders : DEFAULT_CLOUD_PROVIDERS,
+            driveTypes: Array.isArray(cloudSettings.driveTypes) ? cloudSettings.driveTypes : [],
+            formatOptions: Array.isArray(cloudSettings.formatOptions) ? cloudSettings.formatOptions : [],
+            deviceCategories: Array.isArray(cloudSettings.deviceCategories) ? cloudSettings.deviceCategories : [],
+            accessoryCategories: Array.isArray(cloudSettings.accessoryCategories) ? cloudSettings.accessoryCategories : [],
+            cloudProviders: Array.isArray(cloudSettings.cloudProviders) ? cloudSettings.cloudProviders : [],
           });
         }
       },
@@ -868,7 +867,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
         newSettings.deviceCategories = [...newSettings.deviceCategories, trimmed];
       }
     } else if (type === 'accessoryCategory') {
-      const currentList = Array.isArray(newSettings.accessoryCategories) ? newSettings.accessoryCategories : DEFAULT_ACCESSORY_CATEGORIES;
+      const currentList = Array.isArray(newSettings.accessoryCategories) ? newSettings.accessoryCategories : [];
       if (!currentList.includes(trimmed)) {
         newSettings.accessoryCategories = [...currentList, trimmed];
       }
@@ -881,7 +880,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
         newSettings.formatOptions = [...newSettings.formatOptions, trimmed];
       }
     } else if (type === 'cloudProvider') {
-      const currentList = Array.isArray(newSettings.cloudProviders) ? newSettings.cloudProviders : DEFAULT_CLOUD_PROVIDERS;
+      const currentList = Array.isArray(newSettings.cloudProviders) ? newSettings.cloudProviders : [];
       if (!currentList.includes(trimmed)) {
         newSettings.cloudProviders = [...currentList, trimmed];
       }
@@ -895,14 +894,14 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (type === 'category') {
       newSettings.deviceCategories = newSettings.deviceCategories.filter((c) => c !== value);
     } else if (type === 'accessoryCategory') {
-      const currentList = Array.isArray(newSettings.accessoryCategories) ? newSettings.accessoryCategories : DEFAULT_ACCESSORY_CATEGORIES;
+      const currentList = Array.isArray(newSettings.accessoryCategories) ? newSettings.accessoryCategories : [];
       newSettings.accessoryCategories = currentList.filter((c) => c !== value);
     } else if (type === 'driveType') {
       newSettings.driveTypes = newSettings.driveTypes.filter((t) => t !== value);
     } else if (type === 'format') {
       newSettings.formatOptions = newSettings.formatOptions.filter((f) => f !== value);
     } else if (type === 'cloudProvider') {
-      const currentList = Array.isArray(newSettings.cloudProviders) ? newSettings.cloudProviders : DEFAULT_CLOUD_PROVIDERS;
+      const currentList = Array.isArray(newSettings.cloudProviders) ? newSettings.cloudProviders : [];
       newSettings.cloudProviders = currentList.filter((p) => p !== value);
     }
     await persistSettings(newSettings);
@@ -942,7 +941,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
       // Reassign accessories
       if (!user) {
         const updatedAccs = accessories.map((a) => (a.category === oldValue ? { ...a, category: newValue } : a));
-        const currentAccCats = Array.isArray(settings.accessoryCategories) ? settings.accessoryCategories : DEFAULT_ACCESSORY_CATEGORIES;
+        const currentAccCats = Array.isArray(settings.accessoryCategories) ? settings.accessoryCategories : [];
         const newSettings = {
           ...settings,
           accessoryCategories: currentAccCats.filter((c) => c !== oldValue),
@@ -975,7 +974,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
           }
           return dr;
         });
-        const currentProviders = Array.isArray(settings.cloudProviders) ? settings.cloudProviders : DEFAULT_CLOUD_PROVIDERS;
+        const currentProviders = Array.isArray(settings.cloudProviders) ? settings.cloudProviders : [];
         const newSettings = {
           ...settings,
           driveTypes: type === 'driveType' ? settings.driveTypes.filter((t) => t !== oldValue) : settings.driveTypes,
@@ -1044,7 +1043,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
           }
           return a;
         });
-        const currentAccCats = Array.isArray(settings.accessoryCategories) ? settings.accessoryCategories : DEFAULT_ACCESSORY_CATEGORIES;
+        const currentAccCats = Array.isArray(settings.accessoryCategories) ? settings.accessoryCategories : [];
         const newSettings = {
           ...settings,
           accessoryCategories: currentAccCats.filter((c) => c !== oldValueToDelete),
@@ -1072,7 +1071,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
           }
           return dr;
         });
-        const currentProviders = Array.isArray(settings.cloudProviders) ? settings.cloudProviders : DEFAULT_CLOUD_PROVIDERS;
+        const currentProviders = Array.isArray(settings.cloudProviders) ? settings.cloudProviders : [];
         const newSettings = {
           ...settings,
           driveTypes: type === 'driveType' ? settings.driveTypes.filter((t) => t !== oldValueToDelete) : settings.driveTypes,
@@ -1152,7 +1151,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
       // Cascade delete accessories with this category
       if (!user) {
         const updatedAccs = accessories.filter((a) => a.category !== value);
-        const currentAccCats = Array.isArray(settings.accessoryCategories) ? settings.accessoryCategories : DEFAULT_ACCESSORY_CATEGORIES;
+        const currentAccCats = Array.isArray(settings.accessoryCategories) ? settings.accessoryCategories : [];
         const newSettings = {
           ...settings,
           accessoryCategories: currentAccCats.filter((c) => c !== value),
@@ -1179,7 +1178,7 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
           if (type === 'cloudProvider') return dr.cloudProvider !== value;
           return true;
         });
-        const currentProviders = Array.isArray(settings.cloudProviders) ? settings.cloudProviders : DEFAULT_CLOUD_PROVIDERS;
+        const currentProviders = Array.isArray(settings.cloudProviders) ? settings.cloudProviders : [];
         const newSettings = {
           ...settings,
           driveTypes: type === 'driveType' ? settings.driveTypes.filter((t) => t !== value) : settings.driveTypes,
@@ -1255,13 +1254,21 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (!user) return;
     try {
       setSyncStatus('syncing');
-      // Initialize with base config only
+      const EMPTY_SETTINGS: UserSettings = {
+        driveTypes: [],
+        formatOptions: [],
+        deviceCategories: [],
+        accessoryCategories: [],
+        cloudProviders: [],
+        updatedAt: new Date().toISOString(),
+      };
+      // Initialize with completely clean empty config
       const confRef = doc(db, 'users', user.uid, 'settings', 'config');
-      await setDoc(confRef, cleanFirestoreData({ ...INITIAL_SETTINGS, updatedAt: new Date().toISOString() }));
+      await setDoc(confRef, cleanFirestoreData(EMPTY_SETTINGS));
       setDevices([]);
       setDrives([]);
       setAccessories([]);
-      setSettings(INITIAL_SETTINGS);
+      setSettings(EMPTY_SETTINGS);
       setShowOnboardingModal(false);
       setSyncStatus('synced');
     } catch (err) {
@@ -1355,18 +1362,10 @@ export const StorageProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // --- EXPORT & IMPORT ---
   const exportBackup = (): StorageExportData => {
     const catSet = new Set(settings.deviceCategories || []);
-    const accCatSet = new Set(
-      Array.isArray(settings.accessoryCategories) && settings.accessoryCategories.length > 0
-        ? settings.accessoryCategories
-        : DEFAULT_ACCESSORY_CATEGORIES
-    );
+    const accCatSet = new Set(settings.accessoryCategories || []);
     const typeSet = new Set(settings.driveTypes || []);
     const formatSet = new Set(settings.formatOptions || []);
-    const providerSet = new Set(
-      Array.isArray(settings.cloudProviders)
-        ? settings.cloudProviders
-        : DEFAULT_CLOUD_PROVIDERS
-    );
+    const providerSet = new Set(settings.cloudProviders || []);
 
     devices.forEach((dev) => {
       const c = dev.category?.trim();

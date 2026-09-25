@@ -36,9 +36,7 @@ export const DeleteOptionConflictModal: React.FC<DeleteOptionConflictModalProps>
     type === 'category'
       ? settings.deviceCategories || []
       : type === 'accessoryCategory'
-      ? (Array.isArray(settings.accessoryCategories) && settings.accessoryCategories.length > 0
-          ? settings.accessoryCategories
-          : DEFAULT_ACCESSORY_CATEGORIES)
+      ? settings.accessoryCategories || []
       : type === 'driveType'
       ? settings.driveTypes || []
       : type === 'format'

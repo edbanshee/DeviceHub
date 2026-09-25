@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cloud, CloudUpload, Sparkles, Check } from 'lucide-react';
+import { Cloud, CloudUpload, Sparkles, Cpu, HardDrive, Package, ShieldCheck } from 'lucide-react';
 import { useStorage } from '../../context/StorageContext';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -19,24 +19,34 @@ export const CloudOnboardingModal: React.FC = () => {
 
   // Determine actual local counts to import
   const getLocalCounts = () => {
-    if (pendingImportCounts && (pendingImportCounts.devices > 0 || pendingImportCounts.drives > 0)) {
+    if (
+      pendingImportCounts &&
+      (pendingImportCounts.devices > 0 ||
+        pendingImportCounts.drives > 0 ||
+        pendingImportCounts.accessories > 0)
+    ) {
       return pendingImportCounts;
     }
     try {
       const bDevs =
         localStorage.getItem('storage_tracker_guest_backup_devices') ||
-        localStorage.getItem('storage_tracker_devices');
+        localStorage.getItem('storage_tracker_guest_devices');
       const bDrives =
         localStorage.getItem('storage_tracker_guest_backup_drives') ||
-        localStorage.getItem('storage_tracker_drives');
+        localStorage.getItem('storage_tracker_guest_drives');
+      const bAccs =
+        localStorage.getItem('storage_tracker_guest_backup_accessories') ||
+        localStorage.getItem('storage_tracker_guest_accessories');
       const devs = bDevs ? JSON.parse(bDevs) : [];
       const drvs = bDrives ? JSON.parse(bDrives) : [];
+      const accs = bAccs ? JSON.parse(bAccs) : [];
       return {
         devices: Array.isArray(devs) ? devs.length : 0,
         drives: Array.isArray(drvs) ? drvs.length : 0,
+        accessories: Array.isArray(accs) ? accs.length : 0,
       };
     } catch {
-      return { devices: 0, drives: 0 };
+      return { devices: 0, drives: 0, accessories: 0 };
     }
   };
 
@@ -44,28 +54,45 @@ export const CloudOnboardingModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-indigo-200 dark:border-indigo-900/60 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        {/* Glow Header */}
-        <div className="relative p-6 bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-800 text-white text-center overflow-hidden">
+      <div className="relative w-full max-w-lg bg-white dark:bg-[#161619] rounded-3xl shadow-2xl border border-purple-200/80 dark:border-[#27272d] overflow-hidden animate-in fade-in zoom-in-95 duration-200 transition-colors">
+        {/* Header with CollectaHub Ambient Gradient */}
+        <div className="relative p-7 bg-gradient-to-tr from-purple-700 via-indigo-600 to-violet-600 text-white text-center overflow-hidden">
           <div className="relative z-10 flex flex-col items-center">
-            <div className="p-3.5 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-inner mb-3">
-              <Cloud className="w-8 h-8 text-white" />
+            <div className="w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-md border border-white/25 shadow-lg shadow-purple-950/20 flex items-center justify-center mb-3.5">
+              <Cloud className="w-7 h-7 text-white" />
             </div>
-            <h3 className="text-xl font-extrabold tracking-tight">
+            <h3 className="text-xl font-extrabold tracking-tight drop-shadow-xs">
               {t('onboardingTitle')}
             </h3>
-            <p className="text-xs text-indigo-100/90 mt-1.5 max-w-sm">
+            <p className="text-xs text-purple-100/90 mt-1.5 max-w-md leading-relaxed">
               {t('onboardingSubtitle', { email: user?.email || 'tu cuenta de Google' })}
             </p>
+
+            {/* Quick Summary Pill Badges */}
+            <div className="flex items-center justify-center gap-2 mt-4 flex-wrap">
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-bold border border-white/20">
+                <Cpu className="w-3.5 h-3.5" />
+                <span>{counts.devices} {t('conflictTargetDevice')}</span>
+              </div>
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-bold border border-white/20">
+                <Package className="w-3.5 h-3.5" />
+                <span>{counts.accessories} {t('conflictTargetAccessory')}</span>
+              </div>
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-bold border border-white/20">
+                <HardDrive className="w-3.5 h-3.5" />
+                <span>{counts.drives} {t('conflictTargetDrive')}</span>
+              </div>
+            </div>
           </div>
-          {/* Background circles */}
-          <div className="absolute -top-12 -right-12 w-36 h-36 bg-white/10 rounded-full blur-xl pointer-events-none" />
-          <div className="absolute -bottom-12 -left-12 w-36 h-36 bg-purple-500/20 rounded-full blur-xl pointer-events-none" />
+
+          {/* Background Ambient Glow Circles */}
+          <div className="absolute -top-12 -right-12 w-44 h-44 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -bottom-12 -left-12 w-44 h-44 bg-purple-400/20 rounded-full blur-2xl pointer-events-none" />
         </div>
 
         {/* Question & Options */}
-        <div className="p-6 space-y-4">
-          <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+        <div className="p-6 sm:p-7 space-y-4">
+          <p className="text-sm font-bold text-slate-800 dark:text-[#f4f4f5]">
             {t('onboardingQuestion')}
           </p>
 
@@ -74,24 +101,25 @@ export const CloudOnboardingModal: React.FC = () => {
             <button
               type="button"
               onClick={confirmCloudImport}
-              className="w-full text-left p-4 rounded-2xl border border-indigo-200 dark:border-indigo-800/80 bg-indigo-50/50 dark:bg-indigo-950/30 hover:border-indigo-500 dark:hover:border-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition-all group"
+              className="w-full text-left p-4.5 rounded-2xl border border-purple-200/90 dark:border-purple-900/60 bg-purple-50/60 dark:bg-purple-950/25 hover:border-purple-500 dark:hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950/40 transition-all group cursor-pointer shadow-xs"
             >
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-xl bg-indigo-600 text-white shadow-sm mt-0.5 group-hover:scale-105 transition-transform">
+              <div className="flex items-start gap-3.5">
+                <div className="p-2.5 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white shadow-md shadow-purple-600/30 mt-0.5 group-hover:scale-105 transition-transform shrink-0">
                   <CloudUpload className="w-5 h-5" />
                 </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-sm text-slate-900 dark:text-white">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-bold text-sm text-slate-900 dark:text-[#f4f4f5] group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
                       {t('onboardingOptionSyncTitle')}
                     </span>
-                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-900/80 dark:text-indigo-200">
+                    <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900/80 dark:text-purple-200 shrink-0">
                       {t('onboardingBadgeRecommended')}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                  <p className="text-xs text-slate-600 dark:text-[#a1a1aa] mt-1 leading-relaxed">
                     {t('onboardingOptionSyncDesc', {
                       deviceCount: counts.devices,
+                      accessoryCount: counts.accessories,
                       driveCount: counts.drives,
                     })}
                   </p>
@@ -103,17 +131,17 @@ export const CloudOnboardingModal: React.FC = () => {
             <button
               type="button"
               onClick={confirmCloudFresh}
-              className="w-full text-left p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700 transition-all group"
+              className="w-full text-left p-4.5 rounded-2xl border border-slate-200 dark:border-[#27272d] bg-slate-50/70 dark:bg-[#1a1a1e] hover:border-slate-300 dark:hover:border-[#383842] hover:bg-slate-100/70 dark:hover:bg-[#202026] transition-all group cursor-pointer shadow-xs"
             >
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-sm mt-0.5 group-hover:scale-105 transition-transform">
+              <div className="flex items-start gap-3.5">
+                <div className="p-2.5 rounded-xl bg-slate-200 dark:bg-[#282830] text-slate-700 dark:text-[#d4d4d8] shadow-sm mt-0.5 group-hover:scale-105 transition-transform shrink-0">
                   <Sparkles className="w-5 h-5" />
                 </div>
-                <div className="flex-1">
-                  <span className="font-bold text-sm text-slate-900 dark:text-white">
+                <div className="flex-1 min-w-0">
+                  <span className="font-bold text-sm text-slate-900 dark:text-[#f4f4f5]">
                     {t('onboardingOptionFreshTitle')}
                   </span>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  <p className="text-xs text-slate-500 dark:text-[#a1a1aa] mt-1 leading-relaxed">
                     {t('onboardingOptionFreshDesc')}
                   </p>
                 </div>
@@ -125,7 +153,7 @@ export const CloudOnboardingModal: React.FC = () => {
             <button
               type="button"
               onClick={closeOnboardingModal}
-              className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 underline cursor-pointer"
+              className="text-xs font-semibold text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 underline transition-colors cursor-pointer"
             >
               {t('onboardingDecideLater')}
             </button>

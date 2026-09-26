@@ -625,36 +625,43 @@ export const DeviceModal: React.FC<DeviceModalProps> = ({
                     </div>
                   </div>
 
-                  {/* Rated Systems Cards Grid */}
+                  {/* Rated Systems Cards Grid - Single column to display full console names cleanly */}
                   {ratedCount > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 max-h-64 overflow-y-auto pr-1">
+                    <div className="grid grid-cols-1 gap-2 pt-2 max-h-72 overflow-y-auto pr-1">
                       {Object.entries(emulationScores).map(([sysId, currentScore]) => {
                         const sysDef = EMULATION_SYSTEMS.find((s) => s.id === sysId);
                         const groupBadge = getGroupBadgeInfo(sysDef?.groupId);
                         return (
                           <div
                             key={sysId}
-                            className="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-white dark:bg-[#18181c] border border-purple-100 dark:border-purple-900/60 shadow-xs"
+                            className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-3 rounded-xl bg-white dark:bg-[#18181c] border border-purple-100 dark:border-purple-900/60 shadow-xs"
                           >
-                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <div className="flex items-center gap-2.5 min-w-0 flex-1">
                               <span
-                                className={`text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0 ${groupBadge.color}`}
+                                className={`text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 border ${groupBadge.color}`}
                               >
                                 {groupBadge.label}
                               </span>
-                              <span
-                                className="text-xs font-semibold text-slate-800 dark:text-[#f4f4f5] truncate"
-                                title={sysDef?.name || sysId}
-                              >
-                                {sysDef?.shortName || sysId}
-                              </span>
+                              <div className="min-w-0">
+                                <p
+                                  className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-[#f4f4f5] truncate"
+                                  title={sysDef?.name || sysId}
+                                >
+                                  {sysDef?.name || sysDef?.shortName || sysId}
+                                </p>
+                                {sysDef?.shortName && sysDef?.shortName !== sysDef?.name && (
+                                  <p className="text-[10px] text-slate-400 dark:text-[#71717a] truncate font-mono">
+                                    {sysDef.shortName} • {sysDef.year}
+                                  </p>
+                                )}
+                              </div>
                             </div>
 
-                            <div className="flex items-center gap-1.5 shrink-0">
+                            <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
                               <select
                                 value={currentScore}
                                 onChange={(e) => handleScoreChange(sysId, Number(e.target.value))}
-                                className={`px-2 py-1 rounded-lg text-xs font-bold border ${
+                                className={`px-3 py-1.5 rounded-xl text-xs font-bold border cursor-pointer ${
                                   currentScore === 5
                                     ? 'bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800'
                                     : currentScore === 4
@@ -676,10 +683,10 @@ export const DeviceModal: React.FC<DeviceModalProps> = ({
                               <button
                                 type="button"
                                 onClick={() => handleRemoveSystem(sysId)}
-                                className="p-1 text-slate-400 hover:text-red-500 rounded transition-colors"
+                                className="p-1.5 text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg transition-colors cursor-pointer"
                                 title={t('deviceRemoveRating')}
                               >
-                                <Trash2 className="w-3.5 h-3.5" />
+                                <Trash2 className="w-4 h-4" />
                               </button>
                             </div>
                           </div>

@@ -30,7 +30,7 @@ interface DeviceCardProps {
   onAddDrive: (deviceName: string) => void;
   onAddAccessory?: (deviceName: string) => void;
   onEditAccessory?: (accessory: Accessory) => void;
-  onNavigateToMatrix?: () => void;
+  onNavigateToMatrix?: (deviceId?: string) => void;
 }
 
 export const DeviceCard: React.FC<DeviceCardProps> = ({
@@ -79,10 +79,10 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({
 
   return (
     <div className="flex flex-col bg-white dark:bg-[#18181c] rounded-2xl border border-slate-200 dark:border-[#27272b] shadow-xs hover:shadow-md transition-all overflow-hidden">
-      {/* 1. Header with Category Pill, Physical Rating and Action Icons */}
+      {/* 1. Header with Category Pill, Unified Physical Rating Badge and Action Icons */}
       <div className="p-5 pb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-extrabold uppercase tracking-wider bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-[11px] font-medium bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60">
             {device.isGamingDevice ? (
               <Gamepad2 className="w-3.5 h-3.5 text-purple-500" />
             ) : (
@@ -91,16 +91,19 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({
             <span>{device.category}</span>
           </span>
           <div
-            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border text-xs font-bold font-mono ${deviceRatingConfig.badgeBg} ${deviceRatingConfig.badgeBorder} ${deviceRatingConfig.textColor}`}
-            title={`Estado físico: ${safeDeviceRating}/5 (${deviceRatingConfig.label.es})`}
+            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg border text-[11px] font-medium ${deviceRatingConfig.badgeBg} ${deviceRatingConfig.badgeBorder} ${deviceRatingConfig.textColor}`}
+            title={`${language === 'es' ? 'Estado físico' : 'Physical condition'}: ${safeDeviceRating}/5 (${deviceRatingConfig.label[language] || deviceRatingConfig.label.es})`}
           >
+            <span className="text-[10px] font-medium opacity-90">
+              {language === 'es' ? 'Estado' : 'Condition'}
+            </span>
             <Star className={`w-3.5 h-3.5 ${deviceRatingConfig.starColor}`} />
             <span>{safeDeviceRating}</span>
           </div>
         </div>
 
         {/* Action icons */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 shrink-0">
           <button
             type="button"
             onClick={() => setShowInfoModal(true)}
@@ -130,13 +133,15 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({
 
       {/* 2. Device Title and Subtitle (OS • CPU) */}
       <div className="px-5 pb-4">
-        <h3
-          className="text-lg font-extrabold text-slate-900 dark:text-[#f4f4f5] tracking-tight h-14 leading-7 line-clamp-2"
-          title={device.name}
-        >
-          {device.name}
-        </h3>
-        <p className="text-xs text-slate-500 dark:text-[#a1a1aa] mt-0.5 h-4 leading-4 truncate">
+        <div className="min-h-[3.5rem] flex flex-col justify-center">
+          <h3
+            className="text-lg font-extrabold text-slate-900 dark:text-[#f4f4f5] tracking-tight leading-7 line-clamp-2"
+            title={device.name}
+          >
+            {device.name}
+          </h3>
+        </div>
+        <p className="text-xs text-slate-500 dark:text-[#a1a1aa] mt-1 h-4 leading-4 truncate">
           {device.system}{device.cpu ? ` • ${device.cpu}` : ''}
         </p>
       </div>
@@ -160,27 +165,6 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({
           </div>
         </div>
       )}
-
-      {/* 4. Physical Condition Rating Row (Encima de la descripción) */}
-      <div className="px-5 pb-3">
-        <div className={`flex items-center justify-between p-2.5 rounded-xl border ${deviceRatingConfig.badgeBg} ${deviceRatingConfig.badgeBorder}`}>
-          <div className="flex items-center gap-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                className={`w-3.5 h-3.5 ${
-                  safeDeviceRating >= star
-                    ? `${deviceRatingConfig.starColor} drop-shadow-xs`
-                    : 'text-slate-300 dark:text-[#383840]'
-                }`}
-              />
-            ))}
-          </div>
-          <span className={`text-xs font-bold font-sans ${deviceRatingConfig.textColor}`}>
-            {deviceRatingConfig.label.es}
-          </span>
-        </div>
-      </div>
 
       {/* 5. Notes Quote Block */}
       {device.notes && (
@@ -361,7 +345,7 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({
 
       {/* 8. Emulation Capabilities Section (Gaming only) */}
       {device.isGamingDevice && (
-        <div className="px-5 pb-5 mt-auto">
+        <div className="px-5 pb-5">
           <div className="p-4 rounded-xl bg-purple-50/40 dark:bg-purple-950/20 border border-purple-100 dark:border-purple-900/40 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-xs font-bold text-purple-700 dark:text-purple-300">
@@ -411,7 +395,7 @@ export const DeviceCard: React.FC<DeviceCardProps> = ({
             {onNavigateToMatrix && (
               <button
                 type="button"
-                onClick={onNavigateToMatrix}
+                onClick={() => onNavigateToMatrix(device.id)}
                 className="w-full mt-2 pt-2 border-t border-purple-200/50 dark:border-purple-900/40 flex items-center justify-between text-xs font-bold text-purple-600 dark:text-purple-300 hover:text-purple-700 dark:hover:text-purple-200 group cursor-pointer"
               >
                 <span className="flex items-center gap-1.5">

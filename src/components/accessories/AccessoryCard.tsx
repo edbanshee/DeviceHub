@@ -23,7 +23,7 @@ export const AccessoryCard: React.FC<AccessoryCardProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [showInfo, setShowInfo] = useState(false);
 
   const normalizedImageUrl = accessory.imageUrl?.trim()
@@ -34,18 +34,29 @@ export const AccessoryCard: React.FC<AccessoryCardProps> = ({
 
   const safeRating = getSafeRating(accessory.rating, 5);
   const ratingConfig = getRatingConfig(safeRating);
-  const ratingMeaning = ratingConfig.label.es;
 
   return (
     <div className="flex flex-col bg-white dark:bg-[#18181c] rounded-2xl border border-slate-200 dark:border-[#27272b] shadow-xs hover:shadow-md transition-all overflow-hidden">
-      {/* 1. Card Top Bar: Category Pill on Left, Actions on Right */}
+      {/* 1. Card Top Bar: Category Pill & Unified Estado Badge on Left, Actions on Right */}
       <div className="p-4 pb-2 flex items-center justify-between">
-        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-bold uppercase tracking-wider bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60">
-          <span>{accessory.category}</span>
-        </span>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[11px] font-medium bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60">
+            <span>{accessory.category}</span>
+          </span>
+          <div
+            className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg border text-[11px] font-medium ${ratingConfig.badgeBg} ${ratingConfig.badgeBorder} ${ratingConfig.textColor}`}
+            title={`${language === 'es' ? 'Estado físico' : 'Physical condition'}: ${safeRating}/5 (${ratingConfig.label[language] || ratingConfig.label.es})`}
+          >
+            <span className="text-[10px] font-medium opacity-90">
+              {language === 'es' ? 'Estado' : 'Condition'}
+            </span>
+            <Star className={`w-3.5 h-3.5 ${ratingConfig.starColor}`} />
+            <span>{safeRating}</span>
+          </div>
+        </div>
 
         {/* Action icons */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 shrink-0">
           <button
             type="button"
             onClick={() => setShowInfo(true)}
@@ -57,7 +68,7 @@ export const AccessoryCard: React.FC<AccessoryCardProps> = ({
           <button
             type="button"
             onClick={() => onEdit(accessory)}
-            title="Editar"
+            title={t('devicesCardEdit')}
             className="p-1.5 text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-slate-100 dark:hover:bg-[#222226] rounded-lg transition-colors cursor-pointer"
           >
             <Edit2 className="w-4 h-4" />
@@ -65,7 +76,7 @@ export const AccessoryCard: React.FC<AccessoryCardProps> = ({
           <button
             type="button"
             onClick={() => onDelete(accessory)}
-            title="Eliminar"
+            title={t('devicesCardDelete')}
             className="p-1.5 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition-colors cursor-pointer"
           >
             <Trash2 className="w-4 h-4" />
@@ -75,12 +86,14 @@ export const AccessoryCard: React.FC<AccessoryCardProps> = ({
 
       {/* 2. Title & Device Link */}
       <div className="px-4 pb-3">
-        <h3
-          className="text-base font-extrabold text-slate-900 dark:text-[#f4f4f5] tracking-tight h-12 leading-6 line-clamp-2"
-          title={accessory.name}
-        >
-          {accessory.name}
-        </h3>
+        <div className="min-h-[3rem] flex flex-col justify-center">
+          <h3
+            className="text-base font-extrabold text-slate-900 dark:text-[#f4f4f5] tracking-tight leading-6 line-clamp-2"
+            title={accessory.name}
+          >
+            {accessory.name}
+          </h3>
+        </div>
         <div className="flex items-center gap-1.5 mt-1 text-xs text-slate-500 dark:text-[#a1a1aa] h-4 leading-4">
           <Laptop className="w-3.5 h-3.5 text-purple-500 shrink-0" />
           <span className="truncate font-medium">
@@ -105,28 +118,7 @@ export const AccessoryCard: React.FC<AccessoryCardProps> = ({
         </div>
       )}
 
-      {/* 4. Physical Condition Rating Row (Encima de la descripción) */}
-      <div className="px-4 pb-3">
-        <div className={`flex items-center justify-between p-2.5 rounded-xl border ${ratingConfig.badgeBg} ${ratingConfig.badgeBorder}`}>
-          <div className="flex items-center gap-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                className={`w-3.5 h-3.5 ${
-                  safeRating >= star
-                    ? `${ratingConfig.starColor} drop-shadow-xs`
-                    : 'text-slate-300 dark:text-[#383840]'
-                }`}
-              />
-            ))}
-          </div>
-          <span className={`text-xs font-bold font-sans ${ratingConfig.textColor}`}>
-            {ratingMeaning}
-          </span>
-        </div>
-      </div>
-
-      {/* 5. Description */}
+      {/* 4. Description */}
       {accessory.description && (
         <div className="px-4 pb-3">
           <p className="text-xs text-slate-600 dark:text-[#a1a1aa] line-clamp-2 leading-relaxed">

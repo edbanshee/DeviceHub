@@ -217,21 +217,21 @@ export const EMULATION_RATING_DESCRIPTIONS: Record<number, {
   symbol: string;
 }> = {
   1: {
-    label: { es: 'Injugable / Muy Lento', en: 'Unplayable / Severe Lag' },
+    label: { es: 'Injugable / Errores graves', en: 'Unplayable / Severe Lag' },
     badgeBg: 'bg-rose-100 dark:bg-rose-950/80',
     textColor: 'text-rose-700 dark:text-rose-300',
     borderColor: 'border-rose-300 dark:border-rose-800',
     symbol: '1',
   },
   2: {
-    label: { es: 'Lento / Glitches gráficos', en: 'Slow / Graphic Glitches' },
+    label: { es: 'Lento / Caídas de cuadros', en: 'Slow / Graphic Glitches' },
     badgeBg: 'bg-orange-100 dark:bg-orange-950/80',
     textColor: 'text-orange-700 dark:text-orange-300',
     borderColor: 'border-orange-300 dark:border-orange-800',
     symbol: '2',
   },
   3: {
-    label: { es: 'Aceptable / Jugable con tweaks', en: 'Acceptable / Playable' },
+    label: { es: 'Jugable / Aceptable', en: 'Acceptable / Playable' },
     badgeBg: 'bg-amber-100 dark:bg-amber-950/80',
     textColor: 'text-amber-800 dark:text-amber-300',
     borderColor: 'border-amber-300 dark:border-amber-800',
@@ -245,7 +245,7 @@ export const EMULATION_RATING_DESCRIPTIONS: Record<number, {
     symbol: '4',
   },
   5: {
-    label: { es: 'Velocidad Máxima / Full Speed (60FPS)', en: 'Full Speed (60 FPS)' },
+    label: { es: 'Velocidad Máxima (60 FPS)', en: 'Full Speed (60 FPS)' },
     badgeBg: 'bg-emerald-100 dark:bg-emerald-950/80',
     textColor: 'text-emerald-800 dark:text-emerald-300',
     borderColor: 'border-emerald-400 dark:border-emerald-700 font-bold',
@@ -254,9 +254,9 @@ export const EMULATION_RATING_DESCRIPTIONS: Record<number, {
 };
 
 export const RATING_DESCRIPTIONS: Record<number, string> = {
-  1: 'Injugable / Problemas severos o crash',
-  2: 'Lento / Solo con hacks o frameskip',
-  3: 'Jugable con caídas ocasionales de FPS',
+  1: 'Injugable / Problemas severos o cierres',
+  2: 'Lento / Solo con ajustes o salto de fotogramas',
+  3: 'Jugable con caídas ocasionales de fotogramas',
   4: 'Muy Bueno / Rendimiento casi perfecto',
-  5: 'Excelente / Full Speed (60FPS) con upscaling',
+  5: 'Excelente / Velocidad Máxima (60 FPS) con reescalado',
 };

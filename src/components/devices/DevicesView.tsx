@@ -13,7 +13,7 @@ interface DevicesViewProps {
   onAddDriveToDevice: (deviceName: string) => void;
   onAddAccessoryToDevice?: (deviceName: string) => void;
   onEditAccessory?: (accessory: Accessory) => void;
-  onNavigateToMatrix?: () => void;
+  onNavigateToMatrix?: (deviceId?: string) => void;
 }
 
 export const DevicesView: React.FC<DevicesViewProps> = ({

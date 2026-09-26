@@ -174,7 +174,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div className="flex items-center gap-1">
                 <button
                   type="button"
-                  title={`Sincronizado con tu cuenta de Google (${user.email || 'Google'})`}
+                  title={t('authCloudSyncTooltip', { email: user.email || 'Google' })}
                   className="w-8 h-8 rounded-xl flex items-center justify-center bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300/80 dark:border-emerald-800/60 text-emerald-600 dark:text-emerald-400"
                 >
                   <CloudCheck className="w-4 h-4" />
@@ -184,12 +184,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <img
                     src={user.photoURL}
                     alt={user.displayName || 'User'}
-                    title={user.email || user.displayName || 'Usuario'}
+                    title={user.email || user.displayName || (language === 'es' ? 'Usuario' : 'User')}
                     className="w-8 h-8 rounded-xl border border-slate-200 dark:border-[#27272b] object-cover"
                   />
                 ) : (
                   <div
-                    title={user.email || 'Usuario'}
+                    title={user.email || (language === 'es' ? 'Usuario' : 'User')}
                     className="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold text-xs"
                   >
                     {user.email?.[0]?.toUpperCase() || 'U'}
@@ -214,7 +214,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   type="button"
                   onClick={() => signInWithGoogle()}
                   disabled={isSigningIn}
-                  title="Sincronizar con tu cuenta de Google"
+                  title={t('authCloudConnectTooltip')}
                   className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
                     isSigningIn
                       ? 'opacity-50 cursor-not-allowed bg-slate-100 dark:bg-[#18181c] text-purple-600'
@@ -231,7 +231,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <button
                     type="button"
                     onClick={onExitGuest}
-                    title="Volver a la pantalla de bienvenida / Exit to Welcome"
+                    title={t('authExitWelcomeTooltip')}
                     className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-[#f4f4f5] hover:bg-slate-100 dark:hover:bg-[#222226] rounded-xl transition-colors cursor-pointer"
                   >
                     <LogOut className="w-3.5 h-3.5" />

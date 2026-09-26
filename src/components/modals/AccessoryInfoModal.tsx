@@ -25,7 +25,7 @@ export const AccessoryInfoModal: React.FC<AccessoryInfoModalProps> = ({
   onClose,
   onEdit,
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (!isOpen || !accessory) return null;
 
@@ -37,7 +37,7 @@ export const AccessoryInfoModal: React.FC<AccessoryInfoModalProps> = ({
 
   const safeRating = getSafeRating(accessory.rating, 5);
   const ratingConfig = getRatingConfig(safeRating);
-  const ratingMeaning = ratingConfig.label.es;
+  const ratingMeaning = ratingConfig.label[language] || ratingConfig.label.es;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
@@ -49,15 +49,18 @@ export const AccessoryInfoModal: React.FC<AccessoryInfoModalProps> = ({
               <Sparkles className="w-5 h-5" />
             </div>
             <div className="min-w-0">
-              <div className="flex items-center gap-1.5 mb-0.5">
-                <span className="inline-block px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-800">
+              <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+                <span className="inline-block px-2.5 py-0.5 rounded-lg text-[11px] font-medium bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-800">
                   {accessory.category}
                 </span>
                 <span
-                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold border font-mono ${ratingConfig.badgeBg} ${ratingConfig.badgeBorder} ${ratingConfig.textColor}`}
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-[11px] font-medium border ${ratingConfig.badgeBg} ${ratingConfig.badgeBorder} ${ratingConfig.textColor}`}
                 >
-                  <Star className={`w-3 h-3 ${ratingConfig.starColor}`} />
-                  <span>{safeRating} / 5</span>
+                  <span className="text-[10px] font-medium opacity-90">
+                    {language === 'es' ? 'Estado' : 'Condition'}
+                  </span>
+                  <Star className={`w-3.5 h-3.5 ${ratingConfig.starColor}`} />
+                  <span>{safeRating}</span>
                 </span>
               </div>
               <h3 className="text-base font-extrabold text-slate-900 dark:text-[#f4f4f5] truncate">

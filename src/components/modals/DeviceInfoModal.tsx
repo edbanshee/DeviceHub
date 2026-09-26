@@ -28,7 +28,7 @@ interface DeviceInfoModalProps {
   device: Device;
   drives: StorageDrive[];
   onEdit: (device: Device) => void;
-  onNavigateToMatrix?: () => void;
+  onNavigateToMatrix?: (deviceId?: string) => void;
   onEditDrive?: (drive: StorageDrive) => void;
 }
 
@@ -65,33 +65,26 @@ export const DeviceInfoModal: React.FC<DeviceInfoModalProps> = ({
   const scores = device.emulationScores || {};
   const scoredEntries = Object.entries(scores);
 
-  const getScoreBadge = (score: number) => {
+  const getScoreColor = (score: number) => {
+    if (score === 5) return 'border-emerald-500/50 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10';
+    if (score === 4) return 'border-teal-500/50 text-teal-600 dark:text-teal-400 bg-teal-500/10';
+    if (score === 3) return 'border-amber-500/50 text-amber-600 dark:text-amber-400 bg-amber-500/10';
+    if (score === 2) return 'border-orange-500/50 text-orange-600 dark:text-orange-400 bg-orange-500/10';
+    return 'border-rose-500/50 text-rose-600 dark:text-rose-400 bg-rose-500/10';
+  };
+
+  const getScoreLabel = (score: number) => {
     switch (score) {
       case 5:
-        return {
-          label: t('deviceScaleFullSpeed'),
-          color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
-        };
+        return language === 'es' ? 'Velocidad Máxima' : 'Full Speed';
       case 4:
-        return {
-          label: t('deviceScaleVeryGood'),
-          color: 'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/30',
-        };
+        return language === 'es' ? 'Muy Bueno' : 'Very Good';
       case 3:
-        return {
-          label: t('deviceScalePlayable'),
-          color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
-        };
+        return language === 'es' ? 'Jugable' : 'Playable';
       case 2:
-        return {
-          label: t('deviceScaleSlow'),
-          color: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/30',
-        };
+        return language === 'es' ? 'Lento' : 'Slow';
       default:
-        return {
-          label: t('deviceScaleUnplayable'),
-          color: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30',
-        };
+        return language === 'es' ? 'Injugable' : 'Unplayable';
     }
   };
 
@@ -120,18 +113,21 @@ export const DeviceInfoModal: React.FC<DeviceInfoModalProps> = ({
                 {device.name}
               </h3>
               <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                <span className="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-wider bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300">
+                <span className="px-2.5 py-0.5 rounded-lg text-[11px] font-medium bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/60">
                   {device.category}
                 </span>
                 <span className="text-xs text-slate-500 dark:text-[#a1a1aa] font-medium">
                   {device.system}
                 </span>
                 <span
-                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold border font-mono ${deviceRatingConfig.badgeBg} ${deviceRatingConfig.badgeBorder} ${deviceRatingConfig.textColor}`}
-                  title={`Estado físico: ${safeDeviceRating}/5 (${deviceRatingConfig.label.es})`}
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-[11px] font-medium border ${deviceRatingConfig.badgeBg} ${deviceRatingConfig.badgeBorder} ${deviceRatingConfig.textColor}`}
+                  title={`${language === 'es' ? 'Estado físico' : 'Physical condition'}: ${safeDeviceRating}/5 (${deviceRatingConfig.label[language] || deviceRatingConfig.label.es})`}
                 >
+                  <span className="text-[10px] font-medium opacity-90">
+                    {language === 'es' ? 'Estado' : 'Condition'}
+                  </span>
                   <Star className={`w-3.5 h-3.5 ${deviceRatingConfig.starColor}`} />
-                  <span>{safeDeviceRating} / 5</span>
+                  <span>{safeDeviceRating}</span>
                 </span>
               </div>
             </div>
@@ -180,7 +176,7 @@ export const DeviceInfoModal: React.FC<DeviceInfoModalProps> = ({
                 <span>{t('devicesConditionRating')}</span>
               </div>
               <span className={`text-xs font-bold font-sans ${deviceRatingConfig.textColor}`}>
-                {deviceRatingConfig.label.es}
+                {deviceRatingConfig.label[language] || deviceRatingConfig.label.es}
               </span>
             </div>
             <div className={`flex items-center justify-between p-3 rounded-xl border ${deviceRatingConfig.badgeBg} ${deviceRatingConfig.badgeBorder}`}>
@@ -226,7 +222,7 @@ export const DeviceInfoModal: React.FC<DeviceInfoModalProps> = ({
                     type="button"
                     onClick={() => {
                       onClose();
-                      onNavigateToMatrix();
+                      onNavigateToMatrix(device.id);
                     }}
                     className="flex items-center gap-1 text-[11px] font-semibold text-purple-600 dark:text-purple-400 hover:underline cursor-pointer"
                   >
@@ -257,7 +253,8 @@ export const DeviceInfoModal: React.FC<DeviceInfoModalProps> = ({
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-48 overflow-y-auto pr-1">
                     {scoredEntries.map(([sysId, score]) => {
-                      const badge = getScoreBadge(score);
+                      const colorClass = getScoreColor(score);
+                      const label = getScoreLabel(score);
                       const sysDef = EMULATION_SYSTEMS.find((s) => s.id === sysId);
                       return (
                         <div
@@ -270,11 +267,17 @@ export const DeviceInfoModal: React.FC<DeviceInfoModalProps> = ({
                           >
                             {sysDef?.shortName || sysId}
                           </span>
-                          <span
-                            className={`px-1.5 py-0.5 rounded text-[10px] font-bold border shrink-0 ${badge.color}`}
+                          <div
+                            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-semibold border shrink-0 ${colorClass}`}
                           >
-                            {badge.label}
-                          </span>
+                            <span className="inline-flex items-center gap-0.5 font-bold font-mono">
+                              <Star className="w-3 h-3 fill-current shrink-0" />
+                              <span>{score}</span>
+                            </span>
+                            <span className="text-[10px] font-medium opacity-90">
+                              • {label}
+                            </span>
+                          </div>
                         </div>
                       );
                     })}

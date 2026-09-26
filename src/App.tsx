@@ -98,6 +98,19 @@ const MainAppContent: React.FC = () => {
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [importExportModalOpen, setImportExportModalOpen] = useState(false);
   const [atomicWipeModalOpen, setAtomicWipeModalOpen] = useState(false);
+  const [matrixTargetDeviceId, setMatrixTargetDeviceId] = useState<string | null>(null);
+
+  const handleNavigateToMatrix = (deviceId?: string) => {
+    setMatrixTargetDeviceId(deviceId || null);
+    setActiveView('matrix');
+  };
+
+  const handleSetActiveView = (view: ActiveView) => {
+    if (view === 'matrix' && activeView !== 'matrix') {
+      setMatrixTargetDeviceId(null);
+    }
+    setActiveView(view);
+  };
 
   // Toggle for showing/hiding stats and charts (connected to the chip button)
   const [showStats, setShowStats] = useState<boolean>(() => {
@@ -148,7 +161,7 @@ const MainAppContent: React.FC = () => {
       {/* Top Navbar */}
       <Navbar
         activeView={activeView}
-        setActiveView={setActiveView}
+        setActiveView={handleSetActiveView}
         showStats={showStats}
         onToggleStats={toggleStats}
         onOpenSettings={() => setSettingsModalOpen(true)}
@@ -247,7 +260,7 @@ const MainAppContent: React.FC = () => {
                     preselectedDeviceName: accessory.device,
                   })
                 }
-                onNavigateToMatrix={() => setActiveView('matrix')}
+                onNavigateToMatrix={handleNavigateToMatrix}
               />
             )}
 
@@ -291,7 +304,9 @@ const MainAppContent: React.FC = () => {
               />
             )}
 
-            {activeView === 'matrix' && <EmulationMatrixView />}
+            {activeView === 'matrix' && (
+              <EmulationMatrixView initialSelectedDeviceId={matrixTargetDeviceId} />
+            )}
           </>
         )}
       </main>
